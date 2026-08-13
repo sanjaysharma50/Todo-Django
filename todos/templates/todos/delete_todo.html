@@ -1,0 +1,93 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Delete Todo - Todo App</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'todos/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="auth-container">
+
+
+    <div class="auth-card">
+
+
+        <div class="auth-logo">
+            Todo App
+        </div>
+
+
+        <h1>
+            Delete Todo?
+        </h1>
+
+
+        <p class="auth-subtitle">
+
+            Are you sure you want to delete:
+
+            <strong>
+                {{ todo.title }}
+            </strong>
+
+            ?
+
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <button
+                type="submit"
+                class="delete-confirm-btn"
+            >
+                Yes, Delete
+            </button>
+
+
+        </form>
+
+
+        <br>
+
+
+        <a
+            href="{% url 'todo_list' %}"
+            class="back-btn"
+        >
+            Cancel
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

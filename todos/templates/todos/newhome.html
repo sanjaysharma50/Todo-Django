@@ -1,0 +1,152 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Edit Todo - Todo App</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'todos/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+
+        <div class="logo">
+            Todo App
+        </div>
+
+
+        <div class="nav-right">
+
+            <span class="welcome">
+                Welcome, {{ request.user.username }} 👋
+            </span>
+
+
+            <a
+                href="{% url 'logout' %}"
+                class="logout-btn"
+            >
+                Logout
+            </a>
+
+        </div>
+
+
+    </div>
+
+</nav>
+
+
+
+<div class="container">
+
+
+    <div class="card edit-card">
+
+
+        <h2>
+            Edit Todo
+        </h2>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label>
+                    Title
+                </label>
+
+                {{ form.title }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Description
+                </label>
+
+                {{ form.description }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Priority
+                </label>
+
+                {{ form.priority }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Due Date
+                </label>
+
+                {{ form.due_date }}
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Save Changes
+            </button>
+
+
+        </form>
+
+
+        <br>
+
+
+        <a
+            href="{% url 'todo_list' %}"
+            class="back-btn"
+        >
+            ← Back to Dashboard
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
