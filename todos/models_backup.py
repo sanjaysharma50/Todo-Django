@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Todo(models.Model):
@@ -17,13 +18,6 @@ class Todo(models.Model):
         ('shopping', 'Shopping'),
         ('ideas', 'Ideas'),
         ('other', 'Other'),
-    ]
-
-    RECURRENCE_CHOICES = [
-        ('none', 'No Repeat'),
-        ('daily', 'Daily'),
-        ('weekly', 'Weekly'),
-        ('monthly', 'Monthly'),
     ]
 
     user = models.ForeignKey(
@@ -63,33 +57,23 @@ class Todo(models.Model):
         blank=True
     )
 
-    # =========================
-    # RECURRING TASK
-    # =========================
-
-    recurrence = models.CharField(
-        max_length=10,
-        choices=RECURRENCE_CHOICES,
-        default='none'
-    )
-
-    recurrence_until = models.DateField(
-        null=True,
-        blank=True
-    )
-
-    # =========================
-    # REMINDER
-    # =========================
-
-    reminder_at = models.DateTimeField(
-        null=True,
-        blank=True
-    )
-
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    def is_overdue(self):
+        """
+        Returns True when the task has a due date,
+        is not completed, and the due date has passed.
+        """
+
+        if self.completed:
+            return False
+
+        if not self.due_date:
+            return False
+
+        return self.due_date < timezone.localdate()
 
     def __str__(self):
         return self.title

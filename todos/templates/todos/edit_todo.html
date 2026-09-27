@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Todo</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button,
+        .back-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .back-btn:hover {
+            background: #545b62;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Edit Todo</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="title">Title</label>
+        <input
+            type="text"
+            id="title"
+            name="title"
+            value="{{ todo.title }}"
+            required
+        >
+
+        <label for="description">Description</label>
+        <textarea
+            id="description"
+            name="description"
+        >{{ todo.description }}</textarea>
+
+        <label for="priority">Priority</label>
+        <select id="priority" name="priority">
+            <option value="low" {% if todo.priority == "low" %}selected{% endif %}>
+                Low
+            </option>
+
+            <option value="medium" {% if todo.priority == "medium" %}selected{% endif %}>
+                Medium
+            </option>
+
+            <option value="high" {% if todo.priority == "high" %}selected{% endif %}>
+                High
+            </option>
+        </select>
+
+        <label for="due_date">Due Date</label>
+        <input
+            type="date"
+            id="due_date"
+            name="due_date"
+            value="{{ todo.due_date|date:'Y-m-d' }}"
+        >
+
+        <div class="buttons">
+            <button type="submit">Update Todo</button>
+
+            <a href="/" class="back-btn">
+                Back
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

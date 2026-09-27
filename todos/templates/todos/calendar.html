@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Todo Calendar</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            background: white;
+            padding: 22px 26px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header p {
+            margin: 7px 0 0;
+            color: #666;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .dashboard-btn {
+            text-decoration: none;
+            background: #0d6efd;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .dashboard-btn:hover {
+            background: #0b5ed7;
+        }
+
+        .logout-btn {
+            text-decoration: none;
+            background: #dc3545;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: #bb2d3b;
+        }
+
+        /* =========================
+           CALENDAR BOX
+        ========================= */
+
+        .calendar-box {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            background: #212529;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background: #000;
+        }
+
+        /* =========================
+           WEEKDAYS
+        ========================= */
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-weight: bold;
+            padding: 12px 5px;
+            background: #212529;
+            color: white;
+            border-radius: 6px;
+        }
+
+        /* =========================
+           CALENDAR GRID
+        ========================= */
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .day {
+            min-height: 120px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            padding: 8px;
+            background: #fafafa;
+        }
+
+        .empty-day {
+            background: #f1f1f1;
+            border: none;
+        }
+
+        .day-number {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .today {
+            border: 2px solid #0d6efd;
+            background: #eef5ff;
+        }
+
+        .today .day-number {
+            color: #0d6efd;
+        }
+
+        /* =========================
+           TASK
+        ========================= */
+
+        .task {
+            display: block;
+            padding: 7px 8px;
+            margin-bottom: 5px;
+
+            border-radius: 5px;
+
+            background: #e9ecef;
+            color: #222;
+
+            font-size: 12px;
+            font-weight: bold;
+
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .task.completed {
+            background: #d1e7dd;
+            color: #0f5132;
+            text-decoration: line-through;
+        }
+
+        .task.overdue {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .task.high {
+            border-left: 4px solid #dc3545;
+        }
+
+        .task.medium {
+            border-left: 4px solid #ffc107;
+        }
+
+        .task.low {
+            border-left: 4px solid #198754;
+        }
+
+        /* =========================
+           LEGEND
+        ========================= */
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+
+            margin-top: 20px;
+            padding-top: 15px;
+
+            border-top: 1px solid #ddd;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            font-size: 13px;
+            color: #555;
+        }
+
+        .legend-box {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+
+        .legend-today {
+            background: #eef5ff;
+            border: 2px solid #0d6efd;
+        }
+
+        .legend-completed {
+            background: #d1e7dd;
+        }
+
+        .legend-overdue {
+            background: #f8d7da;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            .calendar-box {
+                padding: 12px;
+            }
+
+            .day {
+                min-height: 100px;
+            }
+
+            .task {
+                font-size: 10px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 96%;
+                margin: 15px auto;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-buttons {
+                width: 100%;
+            }
+
+            .dashboard-btn,
+            .logout-btn {
+                text-align: center;
+            }
+
+            .calendar-header {
+                gap: 10px;
+            }
+
+            .calendar-header h2 {
+                font-size: 19px;
+            }
+
+            .weekday {
+                font-size: 11px;
+                padding: 8px 2px;
+            }
+
+            .day {
+                min-height: 80px;
+                padding: 4px;
+            }
+
+            .day-number {
+                font-size: 12px;
+            }
+
+            .task {
+                padding: 4px;
+                font-size: 9px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+
+            <h1>📅 Todo Calendar</h1>
+
+            <p>
+                Your tasks by due date
+            </p>
+
+        </div>
+
+
+        <div class="header-buttons">
+
+            <a
+                href="{% url 'todo_list' %}"
+                class="dashboard-btn"
+            >
+                🏠 Dashboard
+            </a>
+
+
+            <a
+                href="{% url 'logout' %}"
+                class="logout-btn"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- CALENDAR -->
+
+    <div class="calendar-box">
+
+
+        <div class="calendar-header">
+
+            <a
+                href="?year={{ previous_year }}&month={{ previous_month }}"
+                class="nav-btn"
+            >
+                ← Previous
+            </a>
+
+
+            <h2>
+                {{ month_name }} {{ year }}
+            </h2>
+
+
+            <a
+                href="?year={{ next_year }}&month={{ next_month }}"
+                class="nav-btn"
+            >
+                Next →
+            </a>
+
+        </div>
+
+
+        <!-- WEEKDAYS -->
+
+        <div class="weekdays">
+
+            <div class="weekday">Sun</div>
+            <div class="weekday">Mon</div>
+            <div class="weekday">Tue</div>
+            <div class="weekday">Wed</div>
+            <div class="weekday">Thu</div>
+            <div class="weekday">Fri</div>
+            <div class="weekday">Sat</div>
+
+        </div>
+
+
+        <!-- DAYS -->
+
+        <div class="calendar-grid">
+
+            {% for week in weeks %}
+
+                {% for cell in week %}
+
+                    {% if cell.day == 0 %}
+
+                        <div class="day empty-day"></div>
+
+                    {% else %}
+
+                        <div
+                            class="day
+                            {% if cell.day == today.day and month == today.month and year == today.year %}
+                                today
+                            {% endif %}"
+                        >
+
+                            <div class="day-number">
+                                {{ cell.day }}
+                            </div>
+
+
+                            {% for todo in cell.tasks %}
+
+                                <div
+                                    class="task
+                                    {% if todo.completed %}
+                                        completed
+                                    {% elif todo.is_overdue %}
+                                        overdue
+                                    {% endif %}
+                                    {{ todo.priority }}"
+                                    title="{{ todo.title }}"
+                                >
+
+                                    {{ todo.title }}
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- LEGEND -->
+
+        <div class="legend">
+
+            <div class="legend-item">
+
+                <div class="legend-box legend-today"></div>
+
+                Today
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <div class="legend-box legend-completed"></div>
+
+                Completed
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <div class="legend-box legend-overdue"></div>
+
+                Overdue
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

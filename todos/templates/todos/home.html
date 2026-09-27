@@ -1,7 +1,4 @@
-{% load static %}
-
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -15,72 +12,646 @@
 
     <title>Todo Dashboard</title>
 
-    <link
-        rel="stylesheet"
-        href="{% static 'todos/style.css' %}"
-    >
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1250px;
+            margin: 25px auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            margin-bottom: 22px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,.08);
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header p {
+            color: #666;
+            margin-bottom: 0;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .calendar-btn {
+            background: #0d6efd;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+        }
+
+        /* MESSAGES */
+
+        .message {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* STATS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 13px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,.07);
+            border-top: 4px solid #0d6efd;
+        }
+
+        .stat-card.pending {
+            border-color: #ffc107;
+        }
+
+        .stat-card.completed {
+            border-color: #198754;
+        }
+
+        .stat-card.high {
+            border-color: #dc3545;
+        }
+
+        .stat-card.overdue {
+            border-color: #ff5722;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* BOX */
+
+        .box {
+            background: white;
+            padding: 24px;
+            border-radius: 13px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 15px rgba(0,0,0,.07);
+        }
+
+        .box h2 {
+            margin-top: 0;
+        }
+
+        /* SMART SECTION */
+
+        .smart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .smart-card {
+            padding: 20px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border-left: 5px solid #0d6efd;
+        }
+
+        .smart-card.mission {
+            border-left-color: #198754;
+        }
+
+        .smart-card h3 {
+            margin-top: 0;
+        }
+
+        .smart-card p {
+            color: #555;
+        }
+
+        /* FORM */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .add-btn {
+            margin-top: 16px;
+            padding: 12px 20px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .add-btn:hover {
+            background: #0b5ed7;
+        }
+
+        .help {
+            color: #777;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* FILTER */
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .filter-btn,
+        .clear-btn {
+            padding: 11px 17px;
+            border-radius: 7px;
+            font-weight: bold;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .filter-btn {
+            background: #212529;
+            color: white;
+        }
+
+        .clear-btn {
+            background: #6c757d;
+            color: white;
+            display: inline-block;
+        }
+
+        /* REMINDERS */
+
+        .reminder {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .reminder:last-child {
+            margin-bottom: 0;
+        }
+
+        /* TASK */
+
+        .task {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.07);
+            border-left: 5px solid #0d6efd;
+        }
+
+        .task.completed-task {
+            border-left-color: #198754;
+            opacity: .82;
+        }
+
+        .task-title {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .task-description {
+            color: #666;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin: 12px 0;
+        }
+
+        .badge {
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .priority-medium {
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .priority-high {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .category-badge {
+            background: #e2e3e5;
+            color: #41464b;
+        }
+
+        .status-badge {
+            background: #cff4fc;
+            color: #055160;
+        }
+
+        .recurrence-badge {
+            background: #e2d9f3;
+            color: #432874;
+        }
+
+        .reminder-badge {
+            background: #ffe5d0;
+            color: #984c0c;
+        }
+
+        .due-date {
+            color: #555;
+            margin: 8px 0;
+        }
+
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .action-btn {
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .complete-btn {
+            background: #198754;
+        }
+
+        .pending-btn {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .edit-btn {
+            background: #0d6efd;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            color: #777;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 1000px) {
+
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .container {
+                width: 94%;
+                margin: 15px auto;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .smart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-buttons {
+                width: 100%;
+            }
+
+            .header-btn {
+                flex: 1;
+                text-align: center;
+            }
+
+        }
+
+    </style>
 
 </head>
 
 
 <body>
 
-
-<!-- =====================================================
-     NAVBAR
-     ===================================================== -->
-
-<nav class="navbar">
-
-    <div class="nav-container">
+<div class="container">
 
 
-        <div class="logo">
-            Todo App
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+
+            <h1>📝 Todo Dashboard</h1>
+
+            <p>
+                Welcome,
+                <strong>{{ request.user.username }}</strong>
+            </p>
+
         </div>
 
 
-        <div class="nav-right">
+        <div class="header-buttons">
 
-            <span class="welcome">
-                Welcome, {{ request.user.username }} 👋
-            </span>
-
+            <a
+                href="{% url 'calendar' %}"
+                class="header-btn calendar-btn"
+            >
+                📅 Calendar
+            </a>
 
             <a
                 href="{% url 'logout' %}"
-                class="logout-btn"
+                class="header-btn logout-btn"
             >
                 Logout
             </a>
 
         </div>
 
-
     </div>
 
-</nav>
 
-
-
-<!-- =====================================================
-     MAIN
-     ===================================================== -->
-
-<div class="container">
-
-
-    <!-- Messages -->
+    <!-- MESSAGES -->
 
     {% if messages %}
 
-        <div class="messages">
+        {% for message in messages %}
 
-            {% for message in messages %}
+            <div class="message">
+                {{ message }}
+            </div>
 
-                <div class="message {{ message.tags }}">
+        {% endfor %}
 
-                    {{ message }}
+    {% endif %}
+
+
+    <!-- MAIN STATS -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <h3>Total Tasks</h3>
+
+            <div class="number">
+                {{ total_tasks }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card pending">
+
+            <h3>Pending</h3>
+
+            <div class="number">
+                {{ pending_tasks }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card completed">
+
+            <h3>Completed</h3>
+
+            <div class="number">
+                {{ completed_tasks }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card high">
+
+            <h3>High Priority</h3>
+
+            <div class="number">
+                {{ high_priority_tasks }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card overdue">
+
+            <h3>Overdue</h3>
+
+            <div class="number">
+                {{ overdue_tasks }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SMART / DAILY MISSION -->
+
+    <div class="box">
+
+        <div class="smart-grid">
+
+
+            <div class="smart-card mission">
+
+                <h3>🎯 Daily Mission</h3>
+
+                {% if daily_mission %}
+
+                    <p>
+                        Your focus task:
+                    </p>
+
+                    <strong>
+                        {{ daily_mission.title }}
+                    </strong>
+
+                    {% if daily_mission.due_date %}
+
+                        <p>
+                            📅 Due:
+                            {{ daily_mission.due_date|date:"d M Y" }}
+                        </p>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <p>
+                        🎉 No pending tasks!
+                        Add a new goal for today.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="smart-card">
+
+                <h3>🤖 Smart Suggestion</h3>
+
+                <p>
+                    {{ smart_suggestion }}
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- REMINDERS -->
+
+    {% if upcoming_reminders %}
+
+        <div class="box">
+
+            <h2>⏰ Upcoming Reminders</h2>
+
+            {% for todo in upcoming_reminders %}
+
+                <div class="reminder">
+
+                    <strong>
+                        {{ todo.title }}
+                    </strong>
+
+                    <br>
+
+                    🔔
+                    {{ todo.reminder_at|date:"d M Y, h:i A" }}
 
                 </div>
 
@@ -91,107 +662,28 @@
     {% endif %}
 
 
+    <!-- ADD TODO -->
 
-    <!-- Header -->
+    <div class="box">
 
-    <div class="header">
+        <h2>➕ Add New Todo</h2>
 
-        <h1>
-            Todo Dashboard
-        </h1>
+        <form method="POST">
 
-        <p>
-            Manage your tasks and stay productive.
-        </p>
-
-    </div>
+            {% csrf_token %}
 
 
+            {% if form.errors %}
 
-    <!-- =================================================
-         STATISTICS
-         ================================================= -->
+                <div class="message">
+                    Please correct the errors below.
+                    {{ form.errors }}
+                </div>
 
-    <div class="stats">
-
-
-        <div class="stat-card">
-
-            <h3>
-                Total Tasks
-            </h3>
-
-            <div class="number">
-                {{ total_tasks }}
-            </div>
-
-        </div>
+            {% endif %}
 
 
-        <div class="stat-card">
-
-            <h3>
-                Pending
-            </h3>
-
-            <div class="number">
-                {{ pending_tasks }}
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <h3>
-                Completed
-            </h3>
-
-            <div class="number">
-                {{ completed_tasks }}
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <h3>
-                High Priority
-            </h3>
-
-            <div class="number">
-                {{ high_priority }}
-            </div>
-
-        </div>
-
-
-    </div>
-
-
-
-    <!-- =================================================
-         MAIN GRID
-         ================================================= -->
-
-    <div class="main-grid">
-
-
-        <!-- =================================================
-             ADD TODO
-             ================================================= -->
-
-        <div class="card">
-
-            <h2>
-                Add New Todo
-            </h2>
-
-
-            <form method="POST">
-
-                {% csrf_token %}
+            <div class="form-grid">
 
 
                 <div class="form-group">
@@ -201,17 +693,6 @@
                     </label>
 
                     {{ form.title }}
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Description
-                    </label>
-
-                    {{ form.description }}
 
                 </div>
 
@@ -230,6 +711,17 @@
                 <div class="form-group">
 
                     <label>
+                        Category
+                    </label>
+
+                    {{ form.category }}
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
                         Due Date
                     </label>
 
@@ -238,333 +730,506 @@
                 </div>
 
 
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    + Add Todo
-                </button>
+                <div class="form-group">
+
+                    <label>
+                        Repeat
+                    </label>
+
+                    {{ form.recurrence }}
+
+                    <span class="help">
+                        Daily / Weekly / Monthly
+                    </span>
+
+                </div>
 
 
-            </form>
+                <div class="form-group">
 
-        </div>
+                    <label>
+                        Repeat Until
+                    </label>
 
+                    {{ form.recurrence_until }}
 
-
-        <!-- =================================================
-             RIGHT SECTION
-             ================================================= -->
-
-        <div>
+                </div>
 
 
-            <!-- SEARCH -->
+                <div class="form-group">
 
-            <div class="card">
+                    <label>
+                        Reminder
+                    </label>
 
-                <h2>
-                    Search & Filter
-                </h2>
+                    {{ form.reminder_at }}
+
+                    <span class="help">
+                        Set date and time for reminder
+                    </span>
+
+                </div>
 
 
-                <form method="GET">
+                <div class="form-group full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    {{ form.description }}
+
+                </div>
 
 
-                    <div class="search-box">
+            </div>
 
 
-                        <input
-                            type="text"
-                            name="search"
-                            placeholder="Search tasks..."
-                            value="{{ search }}"
+            <button
+                type="submit"
+                class="add-btn"
+            >
+                ➕ Add Todo
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- SEARCH & FILTER -->
+
+    <div class="box">
+
+        <h2>🔎 Search & Filter</h2>
+
+        <form method="GET">
+
+            <div class="filter-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Search
+                    </label>
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Search tasks..."
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Priority
+                    </label>
+
+                    <select name="priority">
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option
+                            value="low"
+                            {% if selected_priority == 'low' %}
+                                selected
+                            {% endif %}
                         >
+                            Low
+                        </option>
+
+                        <option
+                            value="medium"
+                            {% if selected_priority == 'medium' %}
+                                selected
+                            {% endif %}
+                        >
+                            Medium
+                        </option>
+
+                        <option
+                            value="high"
+                            {% if selected_priority == 'high' %}
+                                selected
+                            {% endif %}
+                        >
+                            High
+                        </option>
+
+                    </select>
+
+                </div>
 
 
-                        <select name="priority">
+                <div class="form-group">
+
+                    <label>
+                        Category
+                    </label>
+
+                    <select name="category">
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option
+                            value="work"
+                            {% if selected_category == 'work' %}
+                                selected
+                            {% endif %}
+                        >
+                            Work
+                        </option>
+
+                        <option
+                            value="study"
+                            {% if selected_category == 'study' %}
+                                selected
+                            {% endif %}
+                        >
+                            Study
+                        </option>
+
+                        <option
+                            value="personal"
+                            {% if selected_category == 'personal' %}
+                                selected
+                            {% endif %}
+                        >
+                            Personal
+                        </option>
+
+                        <option
+                            value="shopping"
+                            {% if selected_category == 'shopping' %}
+                                selected
+                            {% endif %}
+                        >
+                            Shopping
+                        </option>
+
+                        <option
+                            value="ideas"
+                            {% if selected_category == 'ideas' %}
+                                selected
+                            {% endif %}
+                        >
+                            Ideas
+                        </option>
+
+                        <option
+                            value="other"
+                            {% if selected_category == 'other' %}
+                                selected
+                            {% endif %}
+                        >
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
 
 
-                            <option value="">
-                                All Priorities
-                            </option>
+                <div class="form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select name="status">
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option
+                            value="pending"
+                            {% if selected_status == 'pending' %}
+                                selected
+                            {% endif %}
+                        >
+                            Pending
+                        </option>
+
+                        <option
+                            value="completed"
+                            {% if selected_status == 'completed' %}
+                                selected
+                            {% endif %}
+                        >
+                            Completed
+                        </option>
+
+                        <option
+                            value="overdue"
+                            {% if selected_status == 'overdue' %}
+                                selected
+                            {% endif %}
+                        >
+                            Overdue
+                        </option>
+
+                    </select>
+
+                </div>
 
 
-                            <option
-                                value="high"
-                                {% if selected_priority == 'high' %}
-                                    selected
-                                {% endif %}
+                <div>
+
+                    <button
+                        type="submit"
+                        class="filter-btn"
+                    >
+                        Filter
+                    </button>
+
+                    <a
+                        href="{% url 'todo_list' %}"
+                        class="clear-btn"
+                    >
+                        Clear
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- YOUR TASKS -->
+
+    <div class="box">
+
+        <h2>📋 Your Tasks</h2>
+
+
+        {% if todos %}
+
+
+            {% for todo in todos %}
+
+                <div class="task {% if todo.completed %}completed-task{% endif %}">
+
+
+                    <h3 class="task-title">
+
+                        {% if todo.completed %}
+
+                            <s>
+                                {{ todo.title }}
+                            </s>
+
+                        {% else %}
+
+                            {{ todo.title }}
+
+                        {% endif %}
+
+                    </h3>
+
+
+                    {% if todo.description %}
+
+                        <p class="task-description">
+                            {{ todo.description }}
+                        </p>
+
+                    {% endif %}
+
+
+                    <div class="badges">
+
+
+                        <span
+                            class="badge
+                            {% if todo.priority == 'low' %}
+                                priority-low
+                            {% elif todo.priority == 'high' %}
+                                priority-high
+                            {% else %}
+                                priority-medium
+                            {% endif %}"
+                        >
+                            {{ todo.get_priority_display }}
+                        </span>
+
+
+                        <span class="badge category-badge">
+
+                            📁
+                            {{ todo.get_category_display }}
+
+                        </span>
+
+
+                        {% if todo.completed %}
+
+                            <span class="badge status-badge">
+                                ✓ Completed
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge status-badge">
+                                ⏳ Pending
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if todo.recurrence != 'none' %}
+
+                            <span class="badge recurrence-badge">
+
+                                🔁
+                                {{ todo.get_recurrence_display }}
+
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if todo.reminder_at %}
+
+                            <span class="badge reminder-badge">
+
+                                🔔 Reminder
+
+                            </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    {% if todo.due_date %}
+
+                        <div class="due-date">
+
+                            📅 Due:
+
+                            <strong>
+                                {{ todo.due_date|date:"d M Y" }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if todo.recurrence_until %}
+
+                        <div class="due-date">
+
+                            🔁 Repeat until:
+
+                            <strong>
+                                {{ todo.recurrence_until|date:"d M Y" }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if todo.reminder_at %}
+
+                        <div class="due-date">
+
+                            🔔 Reminder:
+
+                            <strong>
+                                {{ todo.reminder_at|date:"d M Y, h:i A" }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="actions">
+
+
+                        {% if todo.completed %}
+
+                            <a
+                                href="{% url 'toggle_todo' todo.id %}"
+                                class="action-btn pending-btn"
                             >
-                                High
-                            </option>
+                                ↩ Mark Pending
+                            </a>
 
+                        {% else %}
 
-                            <option
-                                value="medium"
-                                {% if selected_priority == 'medium' %}
-                                    selected
-                                {% endif %}
+                            <a
+                                href="{% url 'toggle_todo' todo.id %}"
+                                class="action-btn complete-btn"
                             >
-                                Medium
-                            </option>
+                                ✓ Mark Complete
+                            </a>
 
-
-                            <option
-                                value="low"
-                                {% if selected_priority == 'low' %}
-                                    selected
-                                {% endif %}
-                            >
-                                Low
-                            </option>
-
-
-                        </select>
-
-
-
-                        <select name="status">
-
-
-                            <option value="">
-                                All Status
-                            </option>
-
-
-                            <option
-                                value="pending"
-                                {% if selected_status == 'pending' %}
-                                    selected
-                                {% endif %}
-                            >
-                                Pending
-                            </option>
-
-
-                            <option
-                                value="completed"
-                                {% if selected_status == 'completed' %}
-                                    selected
-                                {% endif %}
-                            >
-                                Completed
-                            </option>
-
-
-                        </select>
-
-
-
-                        <button type="submit">
-                            Search
-                        </button>
+                        {% endif %}
 
 
                         <a
-                            href="{% url 'todo_list' %}"
-                            class="clear-btn"
+                            href="{% url 'edit_todo' todo.id %}"
+                            class="action-btn edit-btn"
                         >
-                            Clear
+                            ✏️ Edit
+                        </a>
+
+
+                        <a
+                            href="{% url 'delete_todo' todo.id %}"
+                            class="action-btn delete-btn"
+                        >
+                            🗑 Delete
                         </a>
 
 
                     </div>
 
 
-                </form>
+                </div>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <div class="empty">
+
+                <h3>
+                    No tasks found 📭
+                </h3>
+
+                <p>
+                    Add your first task above.
+                </p>
 
             </div>
 
-
-
-            <!-- =================================================
-                 TASKS
-                 ================================================= -->
-
-            <div class="card">
-
-                <h2>
-                    Your Tasks
-                </h2>
-
-
-
-                {% for todo in todos %}
-
-
-                    <div
-                        class="todo-card
-                        {% if todo.completed %}
-                            completed
-                        {% endif %}"
-                    >
-
-
-                        <div class="todo-header">
-
-
-                            <div class="todo-title">
-
-                                {% if todo.completed %}
-
-                                    <s>
-                                        {{ todo.title }}
-                                    </s>
-
-                                {% else %}
-
-                                    {{ todo.title }}
-
-                                {% endif %}
-
-                            </div>
-
-
-
-                            <span
-                                class="priority
-                                {% if todo.priority == 'high' %}
-                                    priority-high
-                                {% elif todo.priority == 'medium' %}
-                                    priority-medium
-                                {% else %}
-                                    priority-low
-                                {% endif %}"
-                            >
-
-                                {{ todo.get_priority_display }}
-
-                            </span>
-
-
-                        </div>
-
-
-
-                        <div class="todo-description">
-
-                            {{ todo.description|default:"No description added." }}
-
-                        </div>
-
-
-
-                        <div class="todo-info">
-
-
-                            <span>
-
-                                📅
-
-                                {% if todo.due_date %}
-
-                                    {{ todo.due_date|date:"M d, Y" }}
-
-                                {% else %}
-
-                                    No due date
-
-                                {% endif %}
-
-                            </span>
-
-
-
-                            <span>
-
-                                {% if todo.completed %}
-
-                                    ✅ Completed
-
-                                {% else %}
-
-                                    ⏳ Pending
-
-                                {% endif %}
-
-                            </span>
-
-
-                        </div>
-
-
-
-                        <div class="todo-actions">
-
-
-                            <a
-                                href="{% url 'toggle_todo' todo.id %}"
-                                class="action-btn complete-btn"
-                            >
-
-                                {% if todo.completed %}
-
-                                    Mark Pending
-
-                                {% else %}
-
-                                    Complete
-
-                                {% endif %}
-
-                            </a>
-
-
-
-                            <a
-                                href="{% url 'edit_todo' todo.id %}"
-                                class="action-btn edit-btn"
-                            >
-                                Edit
-                            </a>
-
-
-
-                            <a
-                                href="{% url 'delete_todo' todo.id %}"
-                                class="action-btn delete-btn"
-                            >
-                                Delete
-                            </a>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                {% empty %}
-
-
-                    <div class="empty">
-
-                        <h3>
-                            No Tasks Found
-                        </h3>
-
-                        <p>
-                            Add your first task to get started.
-                        </p>
-
-                    </div>
-
-
-                {% endfor %}
-
-
-            </div>
-
-
-        </div>
+        {% endif %}
 
 
     </div>
 
 
 </div>
-
 
 </body>
 
